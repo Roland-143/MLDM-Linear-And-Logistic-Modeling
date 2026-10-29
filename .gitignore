@@ -1,0 +1,27 @@
+# Virtual environments and Python cache
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Keep data and model folders, avoid committing generated artifacts
+/data/raw/*.csv
+/data/processed/*
+!/data/processed/.gitkeep
+/models/*
+!/models/.gitkeep
+/results/figures/*
+!/results/figures/.gitkeep
+/results/*.json
+
+# Videos and optional working slides
+/deliverables/*
+!/deliverables/.gitkeep
