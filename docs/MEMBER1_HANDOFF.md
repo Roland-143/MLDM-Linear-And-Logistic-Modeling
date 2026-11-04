@@ -32,7 +32,7 @@ These values were calculated directly from the King County CSV mirror. Property 
 
 ## Selected feature correlations with sale price
 
-Calculated on the full historical dataset for **descriptive EDA only** (not for supervised feature-selection tuning): living area **r = 0.702**, construction grade **r = 0.667**, neighborhood living area **r = 0.585**, bathrooms **r = 0.525**. These are associations, not proof of causality. A compact CSV is included at `tableau/correlation_to_price_snapshot.csv`.
+Calculated on the full historical dataset for **descriptive EDA only** (not for supervised feature-selection tuning): living area **r = 0.702**, construction grade **r = 0.667**, neighborhood living area **r = 0.585**, bathrooms **r = 0.525**. These are associations, not proof of causality. The preparation script reproduces the complete correlation export at `tableau/correlations.csv`.
 
 ## Cleaning and leakage controls
 
@@ -68,7 +68,7 @@ This generates:
 - `data/processed/X_train_preprocessed.csv` and `X_test_preprocessed.csv` — imputed, encoded, scaled inputs, with identical column sets.
 - `data/processed/y_train.csv` and `y_test.csv` — both model targets, including training-derived classifier cutoff.
 
-The generated raw/processed datasets are ignored by the team's existing `.gitignore`. **Do not upload individual test records with private data**; this particular housing dataset is public. The outputs in `tableau/` can be opened directly in Tableau, or shared with Nick to reproduce the dashboard.
+The generated raw/processed datasets and Tableau CSV/JSON extracts are ignored by the team's `.gitignore`; regenerate them locally with `python -m src.member1_prepare`. **Do not upload individual test records with private data**; this particular housing dataset is public. The packaged `tableau/King_County_Member1.twbx` workbook remains tracked for sharing and demonstration.
 
 ## Handoff to the team
 

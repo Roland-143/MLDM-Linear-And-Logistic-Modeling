@@ -5,6 +5,7 @@ from pathlib import Path
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
+from sklearn.model_selection import GroupShuffleSplit, train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
@@ -17,6 +18,20 @@ NUMERIC_FEATURES = [
 CATEGORICAL_FEATURES = ["zipcode"]
 FEATURE_COLUMNS = NUMERIC_FEATURES + CATEGORICAL_FEATURES
 REQUIRED_COLUMNS = FEATURE_COLUMNS + ["price"]
+
+
+def split_sales(frame: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Create a deterministic 80/20 split without leaking repeat properties."""
+    if "id" in frame.columns:
+        splitter = GroupShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
+        train_pos, test_pos = next(
+            splitter.split(frame, groups=frame["id"].astype(str))
+        )
+    else:
+        train_pos, test_pos = train_test_split(
+            range(len(frame)), test_size=0.2, random_state=42
+        )
+    return frame.iloc[train_pos].copy(), frame.iloc[test_pos].copy()
 
 
 def load_housing_data(file_path: str | Path) -> pd.DataFrame:

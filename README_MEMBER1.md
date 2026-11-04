@@ -29,7 +29,7 @@ python -m pytest -q
 - `tests/test_member1.py` — three preprocessing/EDA smoke tests.
 - `docs/MEMBER1_HANDOFF.md` — results and documentation for Nick and model developers.
 - `docs/TABLEAU_DASHBOARD.md` — seven concrete Tableau worksheet specifications.
-- `tableau/data_quality_snapshot.csv` and `tableau/correlation_to_price_snapshot.csv` — small verified findings from the original dataset. More Tableau exports are generated when the scripts run.
+- `tableau/King_County_Member1.twbx` — packaged Tableau workbook. Its reproducible CSV/JSON extracts are generated locally when the preparation script runs.
 
 ## Share via GitHub
 
@@ -47,4 +47,4 @@ git push -u origin member1-motasem-data-eda
 
 Then create a Pull Request on GitHub into `main`. Because this is the team's repo, a PR is safer than overwriting `main`.
 
-Note: `.gitignore` keeps `data/raw/` and `data/processed/` out of GitHub by default; this is intentional. Team members can generate those local data files via the two Python commands. The tableau files are trackable under `tableau/`.
+Note: `.gitignore` keeps `data/raw/`, `data/processed/`, and the reproducible Tableau CSV/JSON extracts out of GitHub by default; this is intentional. Team members can generate those local data files via the two Python commands. The packaged Tableau workbook remains trackable under `tableau/`.

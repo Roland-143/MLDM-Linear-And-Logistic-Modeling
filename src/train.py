@@ -17,12 +17,11 @@ from sklearn.metrics import (
     mean_squared_error, precision_score, r2_score, recall_score, roc_auc_score,
     RocCurveDisplay,
 )
-from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 
 from .preprocessing import (
     build_preprocessor, load_housing_data, select_features,
-    value_deal_labels,
+    split_sales, value_deal_labels,
 )
 
 
@@ -37,10 +36,7 @@ def train_models(data_path: str | Path, output_dir: str | Path = ".") -> dict:
 
     frame = load_housing_data(data_path)
     # Split BEFORE computing classification cutoff or fitting preprocessing.
-    train_idx, test_idx = train_test_split(
-        frame.index.to_numpy(), test_size=0.2, random_state=42
-    )
-    train_frame, test_frame = frame.loc[train_idx], frame.loc[test_idx]
+    train_frame, test_frame = split_sales(frame)
     x_train, x_test = select_features(train_frame), select_features(test_frame)
     y_price_train, y_price_test = train_frame["price"], test_frame["price"]
 

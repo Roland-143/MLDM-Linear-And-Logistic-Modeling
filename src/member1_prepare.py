@@ -10,24 +10,11 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import GroupShuffleSplit, train_test_split
 
 from .preprocessing import (
     FEATURE_COLUMNS, REQUIRED_COLUMNS, build_preprocessor,
-    load_housing_data, select_features, value_deal_labels,
+    load_housing_data, select_features, split_sales, value_deal_labels,
 )
-
-
-def split_sales(frame: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """80/20 split; keep repeat sales of one property in the same partition."""
-    if "id" in frame.columns:
-        indices = GroupShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
-        train_pos, test_pos = next(indices.split(frame, groups=frame["id"].astype(str)))
-        return frame.iloc[train_pos].copy(), frame.iloc[test_pos].copy()
-    train_pos, test_pos = train_test_split(
-        np.arange(len(frame)), test_size=0.2, random_state=42
-    )
-    return frame.iloc[train_pos].copy(), frame.iloc[test_pos].copy()
 
 
 def iqr_outlier_mask(values: pd.Series) -> pd.Series:
