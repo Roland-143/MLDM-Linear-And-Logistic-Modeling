@@ -1,9 +1,9 @@
-"""Member 1 preparation smoke tests using a small synthetic housing dataset."""
+"""Data-preparation tests using a small synthetic housing dataset."""
 
 import numpy as np
 import pandas as pd
 
-from src.member1_prepare import iqr_outlier_mask, prepare, split_sales
+from src.prepare_data import iqr_outlier_mask, prepare, split_sales
 from src.preprocessing import FEATURE_COLUMNS
 
 

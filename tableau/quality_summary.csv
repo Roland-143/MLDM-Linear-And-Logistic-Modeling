@@ -1,0 +1,13 @@
+metric,value
+rows,21613.0
+columns,21.0
+missing_cells,0.0
+identical_duplicate_rows,0.0
+additional_rows_with_repeated_id,177.0
+median_sale_price,450000.0
+average_sale_price,540088.1417665294
+price_iqr_outliers,1146.0
+sqft_iqr_outliers,572.0
+bedrooms_over_10,2.0
+zero_bathrooms,10.0
+missing_sale_dates_after_parsing,0.0

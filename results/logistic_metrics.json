@@ -1,0 +1,38 @@
+{
+  "label": "price_per_sqft_below_fit_partition_median",
+  "cutoff_dollars_per_sqft": 245.39877300613497,
+  "fit_rows": 13831,
+  "validation_rows": 3464,
+  "test_rows": 4318,
+  "positive_rate_fit": 0.49996384932398236,
+  "class_weight": null,
+  "selected_c": 10.0,
+  "selected_threshold": 0.45319425104136946,
+  "validation_roc_auc_for_c": 0.9400060607515331,
+  "validation_at_threshold": {
+    "accuracy": 0.8657621247113164,
+    "precision": 0.8596294216732173,
+    "recall": 0.8768613974799542,
+    "f1": 0.8681599092713355,
+    "roc_auc": 0.9400060607515331
+  },
+  "test_at_threshold": {
+    "accuracy": 0.8564150069476609,
+    "precision": 0.8521469676848162,
+    "recall": 0.8706467661691543,
+    "f1": 0.8612975391498882,
+    "roc_auc": 0.9364492633694795
+  },
+  "test_at_default_0.5": {
+    "accuracy": 0.8578045391384901,
+    "precision": 0.8684817720350715,
+    "recall": 0.85119855269109,
+    "f1": 0.8597533120146186,
+    "roc_auc": 0.9364492633694795
+  },
+  "figures": {
+    "confusion_matrix": "results\\figures\\logreg_confusion_matrix.png",
+    "roc_curve": "results\\figures\\logreg_roc_curve.png",
+    "precision_recall_curve": "results\\figures\\logreg_precision_recall_curve.png"
+  }
+}

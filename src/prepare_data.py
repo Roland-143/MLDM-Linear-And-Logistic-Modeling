@@ -1,7 +1,7 @@
-"""Member 1: reproducible data audit, Tableau exports, and leak-safe preprocessing.
+"""Create data-quality reports, Tableau exports, and model-ready datasets.
 
 Run from repository root:
-    python -m src.member1_prepare --data data/raw/kc_house_data.csv
+    python -m src.prepare_data --data data/raw/kc_house_data.csv
 """
 
 import argparse
@@ -18,7 +18,7 @@ from .preprocessing import (
 
 
 def iqr_outlier_mask(values: pd.Series) -> pd.Series:
-    """Flag unusual values without deleting legitimate expensive properties."""
+    """Flag values outside 1.5 interquartile ranges."""
     low_q, high_q = values.quantile([0.25, 0.75])
     spread = high_q - low_q
     return (values < low_q - 1.5 * spread) | (values > high_q + 1.5 * spread)
@@ -82,7 +82,7 @@ def audit_and_tableau(frame: pd.DataFrame, output_dir: Path) -> dict:
         "bedrooms_over_10": int(data["bedrooms_over_10"].sum()),
         "zero_bathrooms": int(data["zero_bathrooms"].sum()),
         "missing_sale_dates_after_parsing": int(dates.isna().sum()),
-        "note": "Outliers are flagged, not automatically deleted. A repeated ID may represent a legitimate resale."
+        "note": "Outlier flags preserve the source rows; repeated IDs may represent resales."
     }
     (output_dir / "data_quality.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     pd.DataFrame(
@@ -111,7 +111,7 @@ def prepare(data_path: str | Path, output_root: str | Path = ".") -> dict:
     test.to_csv(processed_dir / "test.csv", index=False)
     x_train, x_test = select_features(train), select_features(test)
     transformer = build_preprocessor()
-    # Critical: fit only on training properties, then transform the untouched test properties.
+    # Fit transformations on the training partition only.
     encoded_train = transformer.fit_transform(x_train)
     encoded_test = transformer.transform(x_test)
     names = transformer.get_feature_names_out()
@@ -125,7 +125,7 @@ def prepare(data_path: str | Path, output_root: str | Path = ".") -> dict:
     pd.DataFrame(encoded_test, columns=names).to_csv(
         processed_dir / "X_test_preprocessed.csv", index=False
     )
-    # Derive classification labels from the training-only median.
+    # Apply the training-set cutoff to both partitions.
     cutoff = float((train["price"] / train["sqft_living"]).median())
     for split_name, subset in [("train", train), ("test", test)]:
         labels = pd.DataFrame({
@@ -144,7 +144,7 @@ def prepare(data_path: str | Path, output_root: str | Path = ".") -> dict:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Prepare Member 1 data and Tableau CSVs")
+    parser = argparse.ArgumentParser(description="Prepare model and Tableau datasets")
     parser.add_argument("--data", default="data/raw/kc_house_data.csv")
     parser.add_argument("--output-root", default=".")
     args = parser.parse_args()

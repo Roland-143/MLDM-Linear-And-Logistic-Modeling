@@ -1,109 +1,122 @@
-# CS 46900 — Real Estate Valuation & Investment Classifier
+# King County Real Estate Modeling
 
-**Group:** 4 students | **Dataset:** King County House Sales (`kc_house_data.csv`)
+This project analyzes 21,613 residential sales in King County, Washington, from
+May 2014 through May 2015. It includes an exploratory Tableau workbook and two
+scikit-learn models:
 
-IThe project trains two independent scikit-learn pipelines:
+1. Linear regression estimates sale price.
+2. Logistic regression identifies sales below the training-set median price per
+   square foot.
 
-1. **Linear Regression:** predicts sale price in dollars.
-2. **Logistic Regression:** predicts whether a property has a **below-training-median price per square foot**. This is a *value-deal proxy*, **not** a verified high-yield or profitable investment. Decide with the professor whether this label is appropriate for your final project.
+The classification label is a relative value indicator, not a measure of rental
+yield or investment profit.
 
-## Repository structure
+## Repository contents
 
 ```text
-CS469_Real_Estate_ML/
-├── data/
-│   ├── raw/                 
-|   |    ├── kc_house_data.csv
-│   └── processed/           # Optional cleaned datasets
-├── notebooks/              # Exploratory Data Analysis (EDA)
-├── src/
-│   ├── __init__.py
-│   ├── preprocessing.py     # Feature selection, imputation, scaling, encoding
-│   └── train.py             # Train, evaluate, save models and charts
-├── tests/
-│   └── test_preprocessing.py
-├── models/                  # Generated .joblib models
-├── results/
-│   └── figures/             # Residual, ROC, and confusion-matrix plots
-├── deliverables/            # PDFs and recorded presentation (local)
-├── requirements.txt
-├── .gitignore
-└── README.md
+data/processed/       Versioned train/test and transformed datasets
+data/raw/             Downloaded source data (not versioned)
+docs/                 Data-preparation and Tableau documentation
+notebooks/            Exploratory data analysis notebook
+src/                  Download, preparation, preprocessing, and training code
+tableau/              Packaged workbook and visualization-ready CSV files
+tests/                Automated preprocessing and preparation tests
+deliverables/         Submission checklist and local final files
 ```
 
-## 1. Get started
+## Setup
+
+Python 3.11 or newer is recommended.
 
 ```bash
-git clone <YOUR-GITHUB-REPO-URL>
-cd CS469_Real_Estate_ML
 python -m venv .venv
 ```
 
-**Windows PowerShell:**
+Activate the environment, then install the dependencies. On Windows PowerShell:
 
 ```powershell
 .venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 ```
 
-**macOS/Linux:**
+On macOS or Linux:
 
 ```bash
 source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
-## 2. Run both models
+## Reproduce the analysis
 
 From the repository root:
 
 ```bash
-python -m src.train --data data/raw/kc_house_data.csv
+python -m src.download_kc
+python -m src.prepare_data
+python -m src.train
+python -m pytest -q
 ```
 
-Expected generated outputs:
+The preparation step refreshes the processed datasets and Tableau exports. The
+training step writes fitted pipelines to `models/`, evaluation metrics to
+`results/metrics.json`, and diagnostic plots to `results/figures/`.
+
+Expected regression outputs include:
+
 - `models/linear_model.joblib`
 - `models/linear_model_log_target.joblib`
-- `models/logistic_model.joblib`
-- `results/metrics.json` (raw/log-target MAE, RMSE, R²; Accuracy, Precision, Recall, F1, ROC-AUC)
+- `results/metrics.json`
 - `results/regression_prediction_audit.csv`
 - `results/regression_top_outliers.csv`
 - `results/figures/regression_residuals.png`
 - `results/figures/regression_log_target_residuals.png`
-- `results/figures/classification_confusion_matrix.png`
-- `results/figures/classification_roc_curve.png`
 
-**Note:** There are no real performance scores until you run training against the downloaded dataset.
+## Model results
 
-## 3. Run tests
+The held-out test partition contains 4,318 records.
 
-```bash
-python -m pytest -q
-```
+| Model | Metric | Result |
+|---|---|---:|
+| Raw-price linear regression | MAE | $97,844 |
+| Raw-price linear regression | RMSE | $167,709 |
+| Raw-price linear regression | R² | 0.790 |
+| Log-price linear regression | MAE | $76,144 |
+| Log-price linear regression | RMSE | $147,781 |
+| Log-price linear regression | R² | 0.837 |
+| Logistic regression | Accuracy | 0.858 |
+| Logistic regression | F1 | 0.860 |
+| Logistic regression | ROC-AUC | 0.936 |
 
-## 4. Team responsibilities
+Complete metrics and diagnostic figures are available in `results/`.
 
-| Member | Role | Initial assignment |
-| --- | --- | --- |
-| 1 | Project Lead / Data Engineer | Manage repo, download data, build EDA notebook, review preprocessing |
-| 2 | Regression Developer | Improve price prediction, evaluate residuals and outliers |
-| 3 | Classification Developer | Refine investment-value label, improve classifier and threshold |
-| 4 | Integration / QA Lead | Add tests, reproducibility checks, report and presentation assembly |
+## Data and modeling decisions
 
-All four members contribute to the final report, slides, and recorded presentation.
+- Repeated property IDs remain in a single partition through a deterministic
+  80/20 group split.
+- Numeric features are median-imputed and standardized.
+- ZIP code is treated as a categorical feature and one-hot encoded.
+- Preprocessing transformations and the classification cutoff are fit on the
+  training partition only.
+- Sale price is excluded from classifier inputs.
+- Outliers are flagged for review instead of being removed automatically.
 
-## 5. Assignment deliverables
+See [docs/DATA_PREPARATION.md](docs/DATA_PREPARATION.md) for the data audit,
+[docs/REGRESSION_ANALYSIS.md](docs/REGRESSION_ANALYSIS.md) for regression model
+selection and residual analysis, [docs/LOGISTIC_REGRESSION.md](docs/LOGISTIC_REGRESSION.md)
+for the tuned classifier, and [docs/TABLEAU_DASHBOARD.md](docs/TABLEAU_DASHBOARD.md)
+for workbook details.
 
-Submit **three separate files** as instructed by the professor:
-1. Final report **PDF**
-2. PowerPoint slides exported to **PDF**
-3. Recorded presentation **video with all four contributors**
+## Tableau workbook
 
-The code/repository is a development and demonstration asset; code submission is **not explicitly listed** among the professor's three files. Be prepared to demonstrate your work.
+Open `tableau/King_County_Housing.twbx` in Tableau Desktop or Tableau Public.
+The workbook contains dashboards for housing overview, data quality, and feature
+correlations. The CSV files in the same directory are included for rebuilding or
+extending the visualizations.
 
-## Modeling notes
+## Limitations
 
-- Splits occur **before** fitting imputers, scalers, encoders, or the value cutoff.
-- The sale price is excluded from classifier inputs. A classifier cannot legitimately claim to predict actual *rental yield* from this dataset alone; rent, expenses, and occupancy information would be needed.
-- The starter uses a single 80/20 train/test split and a 0.50 classification threshold. Extend it with cross-validation, tuning, and richer EDA as the project progresses.
-- Because property records are historical, results will not necessarily generalize to present-day market prices.
+The dataset represents historical sale transactions, so the results are not
+current market estimates. Regression errors remain unstable for some unusual
+high-value properties. The classification target does not include rent, expenses,
+financing, vacancy, or occupancy data and should not be interpreted as an
+investment-return prediction.
