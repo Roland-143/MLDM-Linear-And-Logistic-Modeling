@@ -1,0 +1,19 @@
+{
+  "dataset_rows": 21613,
+  "train_rows": 17295,
+  "test_rows": 4318,
+  "regression": {
+    "mae": 97844.20304826017,
+    "rmse": 167708.99514097595,
+    "r2": 0.7897635035069971
+  },
+  "classification": {
+    "label": "price_per_sqft_below_training_median",
+    "cutoff_dollars_per_sqft": 245.27687296416937,
+    "accuracy": 0.8582677165354331,
+    "precision": 0.8706536856745479,
+    "recall": 0.8493894165535957,
+    "f1": 0.8598901098901099,
+    "roc_auc": 0.9355200096510157
+  }
+}

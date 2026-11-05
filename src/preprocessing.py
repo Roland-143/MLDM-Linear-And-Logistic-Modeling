@@ -9,7 +9,7 @@ from sklearn.model_selection import GroupShuffleSplit, train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
-# Available at the point of valuation; don't include 'price', 'id', or 'date'.
+# Features available independently of the sale-price target.
 NUMERIC_FEATURES = [
     "bedrooms", "bathrooms", "sqft_living", "sqft_lot", "floors",
     "waterfront", "view", "condition", "grade", "yr_built",
@@ -78,5 +78,5 @@ def build_preprocessor() -> ColumnTransformer:
 
 
 def value_deal_labels(frame: pd.DataFrame, cutoff: float) -> pd.Series:
-    """Label a property as below-cutoff $/sqft (a VALUE proxy, not yield)."""
+    """Return the below-cutoff price-per-square-foot class label."""
     return (frame["price"] / frame["sqft_living"] < cutoff).astype(int)

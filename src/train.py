@@ -1,4 +1,4 @@
-"""Train/evaluate real-estate price and value-deal models.
+"""Train and evaluate the regression and classification models.
 
 Run: python -m src.train --data data/raw/kc_house_data.csv
 """
@@ -74,7 +74,7 @@ def train_models(data_path: str | Path, output_dir: str | Path = ".") -> dict:
 
     fig, ax = plt.subplots(figsize=(5, 4.5))
     ConfusionMatrixDisplay.from_predictions(y_class_test, class_predictions, ax=ax)
-    ax.set_title("Value-Deal Classifier: Confusion Matrix")
+    ax.set_title("Classification Model: Confusion Matrix")
     fig.tight_layout()
     fig.savefig(figures_dir / "classification_confusion_matrix.png", dpi=160)
     plt.close(fig)
@@ -82,7 +82,7 @@ def train_models(data_path: str | Path, output_dir: str | Path = ".") -> dict:
     if y_class_test.nunique() == 2:
         fig, ax = plt.subplots(figsize=(6, 4.5))
         RocCurveDisplay.from_predictions(y_class_test, class_probabilities, ax=ax)
-        ax.set_title("Value-Deal Classifier: ROC Curve")
+        ax.set_title("Classification Model: ROC Curve")
         fig.tight_layout()
         fig.savefig(figures_dir / "classification_roc_curve.png", dpi=160)
         plt.close(fig)
@@ -100,7 +100,7 @@ def train_models(data_path: str | Path, output_dir: str | Path = ".") -> dict:
             "r2": float(r2_score(y_price_test, price_predictions)),
         },
         "classification": {
-            "label": "price_per_sqft_below_training_median (NOT actual rental yield)",
+            "label": "price_per_sqft_below_training_median",
             "cutoff_dollars_per_sqft": price_per_sqft_cutoff,
             "accuracy": float(accuracy_score(y_class_test, class_predictions)),
             "precision": float(precision_score(y_class_test, class_predictions, zero_division=0)),
