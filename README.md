@@ -63,9 +63,13 @@ python -m src.train --data data/raw/kc_house_data.csv
 
 Expected generated outputs:
 - `models/linear_model.joblib`
+- `models/linear_model_log_target.joblib`
 - `models/logistic_model.joblib`
-- `results/metrics.json` (MAE, RMSE, R²; Accuracy, Precision, Recall, F1, ROC-AUC)
+- `results/metrics.json` (raw/log-target MAE, RMSE, R²; Accuracy, Precision, Recall, F1, ROC-AUC)
+- `results/regression_prediction_audit.csv`
+- `results/regression_top_outliers.csv`
 - `results/figures/regression_residuals.png`
+- `results/figures/regression_log_target_residuals.png`
 - `results/figures/classification_confusion_matrix.png`
 - `results/figures/classification_roc_curve.png`
 
