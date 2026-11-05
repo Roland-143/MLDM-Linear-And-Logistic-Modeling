@@ -3,9 +3,35 @@
   "train_rows": 17295,
   "test_rows": 4318,
   "regression": {
-    "mae": 97844.20304826017,
-    "rmse": 167708.99514097595,
-    "r2": 0.7897635035069971
+    "target_transform": "none",
+    "mae": 97844.18458066878,
+    "rmse": 167709.01996555092,
+    "r2": 0.7897634412678542
+  },
+  "regression_log_target": {
+    "target_transform": "log1p; predictions converted back to dollars with expm1",
+    "mae": 76144.35554600786,
+    "rmse": 147780.60065843118,
+    "r2": 0.836758622128788
+  },
+  "regression_residual_audit": {
+    "top_n_per_model": 20,
+    "full_audit_rows": 4318,
+    "top_outlier_union_rows": 29,
+    "raw_negative_prediction_count": 14,
+    "log_negative_prediction_count": 0,
+    "raw_iqr_outlier_count": 246,
+    "log_iqr_outlier_count": 350,
+    "raw_iqr_lower_bound_dollars": -268931.11298866663,
+    "raw_iqr_upper_bound_dollars": 263608.337728582,
+    "log_iqr_lower_bound_dollars": -175304.55312700034,
+    "log_iqr_upper_bound_dollars": 186804.7975149965,
+    "raw_absolute_residual_over_500k_count": 62,
+    "log_absolute_residual_over_500k_count": 57,
+    "raw_absolute_residual_over_1m_count": 12,
+    "log_absolute_residual_over_1m_count": 9,
+    "full_audit_file": "results/regression_prediction_audit.csv",
+    "top_outliers_file": "results/regression_top_outliers.csv"
   },
   "classification": {
     "label": "price_per_sqft_below_training_median",

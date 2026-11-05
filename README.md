@@ -61,15 +61,28 @@ The preparation step refreshes the processed datasets and Tableau exports. The
 training step writes fitted pipelines to `models/`, evaluation metrics to
 `results/metrics.json`, and diagnostic plots to `results/figures/`.
 
+Expected regression outputs include:
+
+- `models/linear_model.joblib`
+- `models/linear_model_log_target.joblib`
+- `results/metrics.json`
+- `results/regression_prediction_audit.csv`
+- `results/regression_top_outliers.csv`
+- `results/figures/regression_residuals.png`
+- `results/figures/regression_log_target_residuals.png`
+
 ## Model results
 
 The held-out test partition contains 4,318 records.
 
 | Model | Metric | Result |
 |---|---|---:|
-| Linear regression | MAE | $97,844 |
-| Linear regression | RMSE | $167,709 |
-| Linear regression | R² | 0.790 |
+| Raw-price linear regression | MAE | $97,844 |
+| Raw-price linear regression | RMSE | $167,709 |
+| Raw-price linear regression | R² | 0.790 |
+| Log-price linear regression | MAE | $76,144 |
+| Log-price linear regression | RMSE | $147,781 |
+| Log-price linear regression | R² | 0.837 |
 | Logistic regression | Accuracy | 0.858 |
 | Logistic regression | F1 | 0.860 |
 | Logistic regression | ROC-AUC | 0.936 |
@@ -87,8 +100,11 @@ Complete metrics and diagnostic figures are available in `results/`.
 - Sale price is excluded from classifier inputs.
 - Outliers are flagged for review instead of being removed automatically.
 
-See [docs/DATA_PREPARATION.md](docs/DATA_PREPARATION.md) for the data audit and
-[docs/TABLEAU_DASHBOARD.md](docs/TABLEAU_DASHBOARD.md) for workbook details.
+See [docs/DATA_PREPARATION.md](docs/DATA_PREPARATION.md) for the data audit,
+[docs/REGRESSION_ANALYSIS.md](docs/REGRESSION_ANALYSIS.md) for regression model
+selection and residual analysis, [docs/LOGISTIC_REGRESSION.md](docs/LOGISTIC_REGRESSION.md)
+for the tuned classifier, and [docs/TABLEAU_DASHBOARD.md](docs/TABLEAU_DASHBOARD.md)
+for workbook details.
 
 ## Tableau workbook
 
@@ -100,6 +116,7 @@ extending the visualizations.
 ## Limitations
 
 The dataset represents historical sale transactions, so the results are not
-current market estimates. The classification target does not include rent,
-expenses, financing, vacancy, or occupancy data and should not be interpreted as
-an investment-return prediction.
+current market estimates. Regression errors remain unstable for some unusual
+high-value properties. The classification target does not include rent, expenses,
+financing, vacancy, or occupancy data and should not be interpreted as an
+investment-return prediction.
